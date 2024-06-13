@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/container"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/_14sdp"
+    tools:context=".AdjustFragment">
+
+    <LinearLayout
+        android:padding="@dimen/_10sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+
+            android:padding="@dimen/_3sdp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/_9sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Brightness" />
+
+        <SeekBar
+            android:id="@+id/Brightness"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:max="100"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:padding="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_55sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:padding="@dimen/_3sdp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/_9sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Shadow" />
+
+        <SeekBar
+            android:id="@+id/Shadow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:max="200"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:padding="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_110sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+
+            android:padding="@dimen/_3sdp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/_9sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Saturation" />
+
+        <SeekBar
+            android:id="@+id/Saturation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:max="100"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:padding="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_165sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:padding="@dimen/_3sdp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/_9sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Warm" />
+
+        <SeekBar
+            android:id="@+id/Warm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:max="200"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:padding="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_220sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:padding="@dimen/_3sdp"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/_9sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Contrast" />
+
+        <SeekBar
+            android:id="@+id/Contrast"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:max="100"/>
+    </LinearLayout>
+
+
+</FrameLayout>

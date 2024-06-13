@@ -7,16 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/img"
@@ -24,14 +15,25 @@
         android:layout_height="@dimen/_400sdp"
         android:foregroundGravity="center"
         android:gravity="center"
-        android:src="@drawable/deni"
-        app:layout_constraintBottom_toTopOf="@+id/edit"
+        android:src="@drawable/baseline_add_box_24"
+        app:layout_constraintBottom_toTopOf="@+id/draw"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button"
         app:layout_constraintVertical_bias="0.644" />
+
+
+    <com.example.myapplication2345678.DragView
+        android:id="@+id/dview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/edit"
@@ -68,5 +70,43 @@
         app:layout_constraintStart_toEndOf="@+id/button"
         app:layout_constraintTop_toTopOf="@+id/button"
         app:layout_constraintVertical_bias="0.48" />
+
+    <Button
+        android:id="@+id/adjust"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:backgroundTint="#3F51B5"
+        android:text="Adjust"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/edit"
+        app:layout_constraintStart_toEndOf="@+id/edit"
+        app:layout_constraintTop_toTopOf="@+id/edit" />
+
+    <Button
+        android:id="@+id/collage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:backgroundTint="#3F51B5"
+        android:text="Collage"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/adjust"
+        app:layout_constraintStart_toEndOf="@+id/adjust"
+        app:layout_constraintTop_toTopOf="@+id/adjust"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/draw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/white"
+        android:text="Draw"
+        android:backgroundTint="#3F51B5"
+        app:layout_constraintBottom_toTopOf="@+id/edit"
+        app:layout_constraintEnd_toEndOf="@+id/edit"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/edit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.ColorMatrix
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,6 +22,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.chrisbanes.photoview.PhotoView
+import com.squareup.picasso.Picasso
 import com.yalantis.ucrop.UCrop
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.GPUImageView
@@ -32,22 +35,56 @@ class MainActivity : AppCompatActivity() {
     private var bottomSheetDialogFragment : BlankFragment ? = null
 
     lateinit var list : List<filter>
-
-    lateinit var img : PhotoView
     lateinit var button: ImageView
+    lateinit var adjust : Button
     lateinit var crop : TextView
+    lateinit var edit : Button
+    lateinit var draw : Button
+    lateinit var dview : DragView
+
     companion object {
         var uri: Uri? = null
+        lateinit var img : PhotoView
+        var changed_dataset : Boolean = false
     }
 
     var pass : Int = 0
-    var changed_dataset : Boolean = false
+    var adj : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         img  = findViewById(R.id.img)
+        draw = findViewById(R.id.draw)
+        dview = findViewById(R.id.dview)
+
+        //dview.addText("Hello, World!", 200f, 200f,Color.BLUE)
+        val bitmap = BitmapFactory.decodeResource(resources,R.drawable.er);
+        val sbitmap = Bitmap.createScaledBitmap(bitmap,bitmap.width/4,bitmap.height/4,true)
+        dview.addSticker(sbitmap,100f,100f)
+
+        if(changed_dataset) {
+            pass = 55
+
+            val inputStream = uri?.let { contentResolver.openInputStream(it) }
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            list = getFilterList(applicationContext).setFilter(bitmap)
+
+            img.setImageURI(uri)
+            updateBottomFilters()
+
+            changed_dataset = false
+        }
+
+        draw.setOnClickListener{
+            val intent = Intent(this,Draw ::class.java)
+            intent.putExtra("uriofimg", uri.toString())
+            startActivity(intent)
+        }
+
+
+
         button  = findViewById(R.id.button)
 
 
@@ -61,29 +98,17 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent,1101)
         }
 
-        val edit : Button = findViewById(R.id.edit)
+        edit = findViewById(R.id.edit)
 
         edit.setOnClickListener{
             if(pass == 55){
-                if (bottomSheetDialogFragment == null || changed_dataset) {
-                    bottomSheetDialogFragment = BlankFragment(list, img,this)
-                    bottomSheetDialogFragment?.show(
-                        supportFragmentManager,
-                        bottomSheetDialogFragment?.tag
-                    )
-
-                    changed_dataset = false
-                } else {
-                    if (bottomSheetDialogFragment?.isVisible == true) {
-                        bottomSheetDialogFragment?.dismiss()
-                    } else {
-                        bottomSheetDialogFragment?.show(
-                            supportFragmentManager,
-                            bottomSheetDialogFragment?.tag
-                        )
-                    }
-                }
+                setBottomFilters()
             }
+        }
+        val col : Button = findViewById(R.id.collage)
+        col.setOnClickListener{
+            val intent = Intent(this,photo2collage::class.java)
+            startActivity(intent)
         }
 
         crop.setOnClickListener{
@@ -99,7 +124,16 @@ class MainActivity : AppCompatActivity() {
                     .start(this)
             }
         }
+
+        adjust = findViewById<Button?>(R.id.adjust)
+
+        adjust.setOnClickListener {
+            val adjust_blankfragment = AdjustFragment()
+            adjust_blankfragment?.show(supportFragmentManager,adjust_blankfragment?.tag)
+            adj  = 1
+        }
     }
+
 
     private fun setResultImage(uri: Uri) {
         try {
@@ -124,12 +158,43 @@ class MainActivity : AppCompatActivity() {
                 setResultImage(resultUri)
             }
         }
-
         if(uri != null){
             val inputStream = uri?.let { contentResolver.openInputStream(it) }
             val bitmap = BitmapFactory.decodeStream(inputStream)
             list = getFilterList(applicationContext).setFilter(bitmap)
             changed_dataset = true
+        }
+        if(adj == 1) {
+            AdjustFragment.brightnessSeekBar.progress = 50
+            AdjustFragment.saturationSeekBar.progress = 50
+            AdjustFragment.shadowSeekBar.progress = 0
+            AdjustFragment.contrastSeekBar.progress = 0
+            AdjustFragment.updateColorMatrix()
+        }
+    }
+
+
+    fun updateBottomFilters(){
+        bottomSheetDialogFragment = BlankFragment(list, img,this)
+    }
+    fun setBottomFilters(){
+        if (bottomSheetDialogFragment == null || changed_dataset) {
+            bottomSheetDialogFragment = BlankFragment(list, img,this)
+            bottomSheetDialogFragment?.show(
+                supportFragmentManager,
+                bottomSheetDialogFragment?.tag
+            )
+
+            changed_dataset = false
+        } else {
+            if (bottomSheetDialogFragment?.isVisible == true) {
+                bottomSheetDialogFragment?.dismiss()
+            } else {
+                bottomSheetDialogFragment?.show(
+                    supportFragmentManager,
+                    bottomSheetDialogFragment?.tag
+                )
+            }
         }
     }
 

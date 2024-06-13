@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.MyApplication2345678" parent="Base.Theme.MyApplication2345678" />
+
+    <style name="CustomBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>
