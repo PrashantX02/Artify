@@ -7,53 +7,30 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-
-    <com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/img"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/_400sdp"
-        android:foregroundGravity="center"
-        android:gravity="center"
-        android:src="@drawable/baseline_add_box_24"
-        app:layout_constraintBottom_toTopOf="@+id/draw"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button"
-        app:layout_constraintVertical_bias="0.644" />
-
-
-    <com.example.myapplication2345678.DragView
-        android:id="@+id/dview"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#00000000"
+        android:gravity="center"
+        android:text="Add Photo +"
+        android:alpha="0.5"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/_30sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_16sdp"
-        android:layout_marginBottom="@dimen/_16sdp"
-        android:backgroundTint="#3F51B5"
-        android:text="edit"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/button"
         android:layout_width="@dimen/_33sdp"
-        android:layout_height="@dimen/_34sdp"
-
+        android:layout_height="@dimen/_33sdp"
         android:layout_marginStart="@dimen/_16sdp"
+
         android:layout_marginTop="@dimen/_16sdp"
+        android:background="@drawable/background_menu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_add_24" />
@@ -62,51 +39,170 @@
         android:id="@+id/crop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_40sdp"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:background="@drawable/background_menu"
+        android:padding="@dimen/_10sdp"
         android:text="Crop"
-        android:textSize="@dimen/_12sdp"
         android:textColor="@color/white"
+        android:textSize="@dimen/_12sdp"
         app:layout_constraintBottom_toBottomOf="@+id/button"
         app:layout_constraintStart_toEndOf="@+id/button"
         app:layout_constraintTop_toTopOf="@+id/button"
         app:layout_constraintVertical_bias="0.48" />
 
-    <Button
-        android:id="@+id/adjust"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_20sdp"
-        android:backgroundTint="#3F51B5"
-        android:text="Adjust"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/edit"
-        app:layout_constraintStart_toEndOf="@+id/edit"
-        app:layout_constraintTop_toTopOf="@+id/edit" />
 
-    <Button
-        android:id="@+id/collage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:backgroundTint="#3F51B5"
-        android:text="Collage"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/adjust"
-        app:layout_constraintStart_toEndOf="@+id/adjust"
-        app:layout_constraintTop_toTopOf="@+id/adjust"
-        app:layout_constraintVertical_bias="1.0" />
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/img"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_400sdp"
+        android:foregroundGravity="center"
+        android:scaleType="centerCrop"
+        android:gravity="center"
 
-    <Button
-        android:id="@+id/draw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/white"
-        android:text="Draw"
-        android:backgroundTint="#3F51B5"
-        app:layout_constraintBottom_toTopOf="@+id/edit"
-        app:layout_constraintEnd_toEndOf="@+id/edit"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/edit" />
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/crop"
+        app:layout_constraintVertical_bias="0.644" />
 
+    <com.example.myapplication2345678.DragView
+        android:id="@+id/dView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/img"
+        app:layout_constraintEnd_toEndOf="@+id/img"
+        app:layout_constraintStart_toStartOf="@+id/img"
+        app:layout_constraintTop_toTopOf="@+id/img" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/backbgc"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/edit"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:src="@drawable/edit"
+
+            app:civ_border_color="#FFFFFF"
+
+            app:civ_border_width="@dimen/_3sdp"
+            app:civ_circle_background_color="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/adjust"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:src="@drawable/adjust"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="@dimen/_3sdp"
+            app:civ_circle_background_color="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/draw"
+            app:layout_constraintStart_toEndOf="@+id/draw"
+            app:layout_constraintTop_toTopOf="@+id/draw"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/draw"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:src="@drawable/draw"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="@dimen/_3sdp"
+            app:civ_circle_background_color="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/edit"
+            app:layout_constraintStart_toEndOf="@+id/edit"
+            app:layout_constraintTop_toTopOf="@+id/edit"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/sticker"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:src="@drawable/sticker"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="@dimen/_3sdp"
+            app:civ_circle_background_color="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/adjust"
+            app:layout_constraintStart_toEndOf="@+id/adjust"
+            app:layout_constraintTop_toTopOf="@+id/adjust"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="@dimen/_26sdp"
+            android:gravity="center"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_6sdp"
+            android:text="R"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.592" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="@dimen/_25sdp"
+            android:gravity="center"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingBottom="@dimen/_6sdp"
+            android:text="U"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+            app:layout_constraintEnd_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="@+id/textView2"
+            app:layout_constraintVertical_bias="1.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:background="@drawable/buttonbg"
+        android:gravity="center"
+        android:paddingBottom="@dimen/_6sdp"
+        android:paddingTop="@dimen/_4sdp"
+        android:text="save"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/crop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/crop" />
+
+    <ImageView
+        android:id="@+id/tick"
+        android:layout_width="@dimen/_17sdp"
+        android:layout_marginBottom="@dimen/_7sdp"
+        android:layout_height="@dimen/_17sdp"
+        android:src="@drawable/tick"
+        app:layout_constraintBottom_toTopOf="@+id/img"
+        app:layout_constraintEnd_toEndOf="@+id/img" />
 </androidx.constraintlayout.widget.ConstraintLayout>

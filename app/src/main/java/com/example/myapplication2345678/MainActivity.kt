@@ -2,33 +2,26 @@ package com.example.myapplication2345678
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.ColorMatrix
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.Button
-import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.isVisible
 import com.github.chrisbanes.photoview.PhotoView
-import com.squareup.picasso.Picasso
 import com.yalantis.ucrop.UCrop
-import jp.co.cyberagent.android.gpuimage.GPUImage
-import jp.co.cyberagent.android.gpuimage.GPUImageView
+import de.hdodenhof.circleimageview.CircleImageView
 import java.io.File
 import java.io.IOException
-import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,11 +29,13 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var list : List<filter>
     lateinit var button: ImageView
-    lateinit var adjust : Button
+    lateinit var adjust : CircleImageView
     lateinit var crop : TextView
-    lateinit var edit : Button
-    lateinit var draw : Button
+    lateinit var edit : CircleImageView
+    lateinit var draw : CircleImageView
+    lateinit var sticker : CircleImageView
     lateinit var dview : DragView
+    lateinit var tick : ImageView
 
     companion object {
         var uri: Uri? = null
@@ -56,13 +51,37 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         img  = findViewById(R.id.img)
+        sticker = findViewById(R.id.sticker)
         draw = findViewById(R.id.draw)
-        dview = findViewById(R.id.dview)
+        dview = findViewById(R.id.dView)
+        tick = findViewById(R.id.tick)
+        dview.visibility  = View.GONE
+        tick.visibility = View.GONE
 
-        //dview.addText("Hello, World!", 200f, 200f,Color.BLUE)
-        val bitmap = BitmapFactory.decodeResource(resources,R.drawable.er);
-        val sbitmap = Bitmap.createScaledBitmap(bitmap,bitmap.width/4,bitmap.height/4,true)
-        dview.addSticker(sbitmap,100f,100f)
+//        dview.addText("Hello, World!", 200f, 200f, Color.BLUE)
+//        val bitmap = BitmapFactory.decodeResource(resources,R.drawable.er);
+//        val sbitmap = Bitmap.createScaledBitmap(bitmap,bitmap.width/4,bitmap.height/4,true)
+//        dview.addSticker(sbitmap,100f,100f)
+
+        sticker.setOnClickListener{
+            dview.visibility = View.VISIBLE
+            tick.visibility = View.VISIBLE
+            val stickerFragment = sticker(dview)
+            stickerFragment.show(supportFragmentManager,stickerFragment?.tag)
+        }
+
+
+        tick.setOnClickListener{
+            val bitmap : Bitmap = mergeImageViewAndDragView(img,dview)
+            img.setImageBitmap(bitmap)
+            uri = converters.bitmapToUri(applicationContext, bitmap)
+            img.setImageURI(uri)
+            dview.visibility = View.GONE
+            tick.visibility = View.GONE
+            list = getFilterList(applicationContext).setFilter(bitmap)
+            updateBottomFilters()
+        }
+
 
         if(changed_dataset) {
             pass = 55
@@ -81,6 +100,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this,Draw ::class.java)
             intent.putExtra("uriofimg", uri.toString())
             startActivity(intent)
+
         }
 
 
@@ -105,11 +125,11 @@ class MainActivity : AppCompatActivity() {
                 setBottomFilters()
             }
         }
-        val col : Button = findViewById(R.id.collage)
-        col.setOnClickListener{
-            val intent = Intent(this,photo2collage::class.java)
-            startActivity(intent)
-        }
+//        val col : Button = findViewById(R.id.collage)
+//        col.setOnClickListener{
+//            val intent = Intent(this,photo2collage::class.java)
+//            startActivity(intent)
+//        }
 
         crop.setOnClickListener{
             val destinationUri = Uri.fromFile(File(cacheDir, "croppedImage.jpg"))
@@ -125,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        adjust = findViewById<Button?>(R.id.adjust)
+        adjust = findViewById<CircleImageView?>(R.id.adjust)
 
         adjust.setOnClickListener {
             val adjust_blankfragment = AdjustFragment()
@@ -169,7 +189,7 @@ class MainActivity : AppCompatActivity() {
             AdjustFragment.saturationSeekBar.progress = 50
             AdjustFragment.shadowSeekBar.progress = 0
             AdjustFragment.contrastSeekBar.progress = 0
-            AdjustFragment.updateColorMatrix()
+            AdjustFragment.updateColorMatrix(applicationContext)
         }
     }
 
@@ -196,6 +216,30 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+    }
+
+
+    fun mergeImageViewAndDragView(imageView: PhotoView, dragView: DragView): Bitmap {
+        val width = maxOf(imageView.width, dragView.width)
+        val height = maxOf(imageView.height, dragView.height)
+
+        val resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(resultBitmap)
+
+        val drawable = imageView.drawable
+        if (drawable is BitmapDrawable) {
+            val matrix = imageView.imageMatrix
+            val drawableBitmap = drawable.bitmap
+            val transformedBitmap = Bitmap.createBitmap(drawableBitmap.width, drawableBitmap.height, Bitmap.Config.ARGB_8888)
+            val transformedCanvas = Canvas(transformedBitmap)
+            transformedCanvas.drawBitmap(drawableBitmap, matrix, null)
+
+            canvas.drawBitmap(transformedBitmap, 0f, 0f, null)
+        }
+
+        dragView.draw(canvas)
+
+        return resultBitmap
     }
 
 }

@@ -1,29 +1,33 @@
 package com.example.myapplication2345678
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
-import android.graphics.Paint
+import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.VectorDrawable
+import android.net.Uri
 import android.os.Bundle
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.color.utilities.Contrast
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class AdjustFragment() : BottomSheetDialogFragment(){
+
 
     companion object{
 
@@ -34,7 +38,7 @@ class AdjustFragment() : BottomSheetDialogFragment(){
          lateinit var warmSeekBar : SeekBar
 
         var colorMatrix = ColorMatrix()
-        fun updateColorMatrix() {
+        fun updateColorMatrix(context: Context) {
             colorMatrix.reset()
 
             // Apply saturation adjustment
@@ -63,7 +67,14 @@ class AdjustFragment() : BottomSheetDialogFragment(){
 
             // Apply the combined color matrix to the image
             val colorFilter = ColorMatrixColorFilter(colorMatrix)
-            MainActivity.img.setColorFilter(colorFilter)
+            MainActivity.img.colorFilter = colorFilter
+
+
+            val file = converters.imageViewToBitmap2(MainActivity.img)
+                ?.let { bitmapToFile(context, it) }
+            val imageUri = Uri.fromFile(file)
+            MainActivity.uri = imageUri
+            MainActivity.img.setImageURI(MainActivity.uri)
         }
 
         private fun applyShadow(fadeIntensity: Float) {
@@ -105,13 +116,31 @@ class AdjustFragment() : BottomSheetDialogFragment(){
             colorMatrix.postConcat(ColorMatrix(warmthMatrix))
         }
 
+
+        fun bitmapToFile(context: Context, bitmap: Bitmap): File {
+            val file = File(context.cacheDir, "image2.jpg")
+
+            try {
+                val outputStream = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                outputStream.flush()
+                outputStream.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            return file
+        }
     }
+
+
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val context : Context = requireContext()
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_adjust, container, false)
 
@@ -137,7 +166,7 @@ class AdjustFragment() : BottomSheetDialogFragment(){
 
         warmSeekBar.setOnSeekBarChangeListener(object  : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                updateColorMatrix()
+                updateColorMatrix(context)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -150,7 +179,7 @@ class AdjustFragment() : BottomSheetDialogFragment(){
 
         shadowSeekBar.setOnSeekBarChangeListener(object  : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                updateColorMatrix()
+                updateColorMatrix(context)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -165,7 +194,7 @@ class AdjustFragment() : BottomSheetDialogFragment(){
 
         saturationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                updateColorMatrix()
+                updateColorMatrix(context)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -180,7 +209,7 @@ class AdjustFragment() : BottomSheetDialogFragment(){
 
         brightnessSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                updateColorMatrix()
+                updateColorMatrix(context)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -195,7 +224,7 @@ class AdjustFragment() : BottomSheetDialogFragment(){
 
         shadowSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                updateColorMatrix()
+                updateColorMatrix(context)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -211,7 +240,7 @@ class AdjustFragment() : BottomSheetDialogFragment(){
         contrastSeekBar= view.findViewById(R.id.Contrast)
         contrastSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                updateColorMatrix()
+                updateColorMatrix(context)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -223,6 +252,12 @@ class AdjustFragment() : BottomSheetDialogFragment(){
             }
 
         })
+        // brushSizeSeekBar.progressDrawable.setColorFilter(ContextCompat.getColor(this,R.color.buttonbgc),PorterDuff.Mode.SRC_IN)
+        contrastSeekBar.progressDrawable.setColorFilter(ContextCompat.getColor(context,R.color.buttonbgc),PorterDuff.Mode.SRC_IN)
+        brightnessSeekBar.progressDrawable.setColorFilter(ContextCompat.getColor(context,R.color.buttonbgc),PorterDuff.Mode.SRC_IN)
+        shadowSeekBar.progressDrawable.setColorFilter(ContextCompat.getColor(context,R.color.buttonbgc),PorterDuff.Mode.SRC_IN)
+        warmSeekBar.progressDrawable.setColorFilter(ContextCompat.getColor(context,R.color.buttonbgc),PorterDuff.Mode.SRC_IN)
+        saturationSeekBar.progressDrawable.setColorFilter(ContextCompat.getColor(context,R.color.buttonbgc),PorterDuff.Mode.SRC_IN)
 
         return view
     }

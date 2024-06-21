@@ -3,25 +3,34 @@ package com.example.myapplication2345678
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import kotlin.math.sqrt
+
 
 class DragView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : View(context, attrs) {
 
     private var bitmap: Bitmap? = null
-    private val stickers: MutableList<Sticker> = mutableListOf()
-    private val texts: MutableList<Text> = mutableListOf()
+    val stickers: MutableList<Sticker> = mutableListOf()
+    val texts: MutableList<Text> = mutableListOf()
     private val paint = Paint()
 
     private var selectedSticker: Sticker? = null
     private var selectedText: Text? = null
-    private var offsetX: Float = 0f
-    private var offsetY: Float = 0f
+    private var stickerOffsetX: Float = 0f
+    private var stickerOffsetY: Float = 0f
+    private var textOffsetX: Float = 0f
+    private var textOffsetY: Float = 0f
+
+    // Variables to handle pinch-to-zoom
+    private var initialDistance: Float = 0f
+    private var initialStickerWidth: Int = 0
+    private var initialStickerHeight: Int = 0
+    private var initialTextSize: Float = 40f
 
     fun setBitmap(bitmap: Bitmap) {
         this.bitmap = bitmap
@@ -29,7 +38,7 @@ class DragView @JvmOverloads constructor(
     }
 
     fun addSticker(sticker: Bitmap, x: Float, y: Float) {
-        stickers.add(Sticker(sticker, x, y))
+        stickers.add(Sticker(sticker, sticker, x, y))
         invalidate()
     }
 
@@ -50,13 +59,13 @@ class DragView @JvmOverloads constructor(
         bitmap?.let { canvas.drawBitmap(it, 0f, 0f, null) }
 
         for (sticker in stickers) {
-            canvas.drawBitmap(sticker.bitmap, sticker.x + offsetX, sticker.y + offsetY, null)
+            canvas.drawBitmap(sticker.currentBitmap, sticker.x, sticker.y, null)
         }
 
         for (text in texts) {
             paint.color = text.color
-            paint.textSize = 40f
-            canvas.drawText(text.text, text.x + offsetX, text.y + offsetY, paint)
+            paint.textSize = text.size
+            canvas.drawText(text.text, text.x, text.y, paint)
         }
     }
 
@@ -64,30 +73,59 @@ class DragView @JvmOverloads constructor(
         val x = event.x
         val y = event.y
 
-        when (event.action) {
+        when (event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
-                selectedSticker = stickers.find { it.isInside(x - offsetX, y - offsetY) }
-                selectedText = texts.find { it.isInside(x - offsetX, y - offsetY) }
+                selectedSticker = stickers.find { it.isInside(x, y) }
+                selectedText = texts.find { it.isInside(x, y) }
                 selectedSticker?.let {
-                    offsetX = x - it.x
-                    offsetY = y - it.y
+                    stickerOffsetX = x - it.x
+                    stickerOffsetY = y - it.y
                 }
                 selectedText?.let {
-                    offsetX = x - it.x
-                    offsetY = y - it.y
+                    textOffsetX = x - it.x
+                    textOffsetY = y - it.y
+                }
+            }
+
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                if (event.pointerCount == 2) {
+                    initialDistance = getDistance(event)
+                    selectedSticker?.let {
+                        initialStickerWidth = it.originalBitmap.width
+                        initialStickerHeight = it.originalBitmap.height
+                    }
+                    selectedText?.let {
+                        initialTextSize = it.size
+                    }
                 }
             }
 
             MotionEvent.ACTION_MOVE -> {
-                selectedSticker?.let {
-                    it.x = x - offsetX
-                    it.y = y - offsetY
-                    invalidate()
-                }
-                selectedText?.let {
-                    it.x = x - offsetX
-                    it.y = y - offsetY
-                    invalidate()
+                if (event.pointerCount == 1) {
+                    selectedSticker?.let {
+                        it.x = x - stickerOffsetX
+                        it.y = y - stickerOffsetY
+                        invalidate()
+                    }
+                    selectedText?.let {
+                        it.x = x - textOffsetX
+                        it.y = y - textOffsetY
+                        invalidate()
+                    }
+                } else if (event.pointerCount == 2) {
+                    val newDistance = getDistance(event)
+                    val scaleFactor = newDistance / initialDistance
+                    selectedSticker?.let {
+                        it.currentBitmap = Bitmap.createScaledBitmap(
+                            it.originalBitmap, (initialStickerWidth * scaleFactor).toInt(),
+                            (initialStickerHeight * scaleFactor).toInt(), true
+                        )
+                        invalidate()
+                    }
+                    selectedText?.let {
+                        it.size = initialTextSize * scaleFactor
+                        invalidate()
+                    }
                 }
             }
 
@@ -100,16 +138,22 @@ class DragView @JvmOverloads constructor(
         return true
     }
 
-    private data class Sticker(val bitmap: Bitmap, var x: Float, var y: Float) {
+    private fun getDistance(event: MotionEvent): Float {
+        val dx = (event.getX(0) - event.getX(1)).toFloat()
+        val dy = (event.getY(0) - event.getY(1)).toFloat()
+        return sqrt(dx * dx + dy * dy)
+    }
+
+    data class Sticker(val originalBitmap: Bitmap, var currentBitmap: Bitmap, var x: Float, var y: Float) {
         fun isInside(px: Float, py: Float): Boolean {
-            return px >= x && px <= x + bitmap.width && py >= y && py <= y + bitmap.height
+            return px >= x && px <= x + currentBitmap.width && py >= y && py <= y + currentBitmap.height
         }
     }
 
-    private data class Text(val text: String, var x: Float, var y: Float, var color: Int) {
+    data class Text(val text: String, var x: Float, var y: Float, var color: Int, var size: Float = 40f) {
         fun isInside(px: Float, py: Float): Boolean {
             val paint = Paint().apply {
-                textSize = 40f
+                textSize = size
             }
             val textWidth = paint.measureText(text)
             val textHeight = paint.fontMetrics.bottom - paint.fontMetrics.top
