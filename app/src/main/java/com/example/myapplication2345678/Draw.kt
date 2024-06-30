@@ -32,6 +32,15 @@ class Draw : AppCompatActivity() {
     private lateinit var selected : CircleImageView
 
 
+    companion object {
+        fun getBitMapOfView(view:View) : Bitmap{
+            val bitmap = Bitmap.createBitmap(view.width,view.height,Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            view.draw(canvas)
+            return bitmap
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_draw)
@@ -55,7 +64,13 @@ class Draw : AppCompatActivity() {
         save = findViewById(R.id.save)
 
         save.setOnClickListener{
-            MainActivity.uri = bitmapToUri(getBitMapOfView(view))
+            val bitmap : Bitmap = getBitMapOfView(view)
+            MainActivity.stack.add(MainActivity.uri?.let { it1 ->
+                converters.uriToBitmap(this,
+                    it1
+                )
+            })
+            MainActivity.uri = bitmapToUri(bitmap)
             MainActivity.img.setImageURI(MainActivity.uri)
             MainActivity.changed_dataset = true
 
@@ -128,12 +143,7 @@ class Draw : AppCompatActivity() {
         return list
     }
 
-    fun getBitMapOfView(view:View) : Bitmap{
-        val bitmap = Bitmap.createBitmap(view.width,view.height,Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        view.draw(canvas)
-        return bitmap
-    }
+
 
     fun bitmapToUri(bitmap: Bitmap): Uri? {
         var uri: Uri? = null

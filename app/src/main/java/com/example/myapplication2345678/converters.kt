@@ -2,6 +2,7 @@ package com.example.myapplication2345678
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -104,6 +105,19 @@ class converters {
             val imageFileName = "JPEG_${timeStamp}_"
             val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             return File.createTempFile(imageFileName, ".jpg", storageDir)
+        }
+
+        fun uriToBitmap(context: Context, uri: Uri): Bitmap? {
+            return try {
+                val contentResolver = context.contentResolver
+                val inputStream = contentResolver.openInputStream(uri)
+                BitmapFactory.decodeStream(inputStream).also {
+                    inputStream?.close()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
     }
 }

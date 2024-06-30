@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:padding="@dimen/_10sdp"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/photoView"
+        android:layout_width="@dimen/_100sdp"
+        android:scaleType="centerCrop"
+        android:layout_height="@dimen/_400sdp"
+        android:background="@color/light_blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/photoView2"
+        android:layout_width="@dimen/_160sdp"
+        android:layout_height="@dimen/_86sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:background="@color/LightBlack"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/photoView"
+        app:layout_constraintTop_toTopOf="@+id/photoView" />
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/photoView3"
+        android:layout_width="@dimen/_160sdp"
+        android:layout_height="@dimen/_86sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:scaleType="centerCrop"
+        android:background="@color/LightBlack"
+        app:layout_constraintEnd_toEndOf="@+id/photoView2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/photoView2"
+        app:layout_constraintTop_toBottomOf="@+id/photoView2" />
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/photoView4"
+        android:layout_width="@dimen/_160sdp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:scaleType="centerCrop"
+        android:background="@color/LightBlack"
+        app:layout_constraintBottom_toBottomOf="@+id/photoView"
+        app:layout_constraintEnd_toEndOf="@+id/photoView2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/photoView2"
+        app:layout_constraintTop_toBottomOf="@+id/photoView3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

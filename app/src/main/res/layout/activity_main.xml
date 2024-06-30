@@ -50,32 +50,43 @@
         app:layout_constraintTop_toTopOf="@+id/button"
         app:layout_constraintVertical_bias="0.48" />
 
-
-    <com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/img"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_1"
         android:layout_width="0dp"
         android:layout_height="@dimen/_400sdp"
-        android:foregroundGravity="center"
-        android:scaleType="centerCrop"
-        android:gravity="center"
-
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/crop"
-        app:layout_constraintVertical_bias="0.644" />
+        app:layout_constraintTop_toBottomOf="@+id/crop">
 
-    <com.example.myapplication2345678.DragView
-        android:id="@+id/dView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/img"
-        app:layout_constraintEnd_toEndOf="@+id/img"
-        app:layout_constraintStart_toStartOf="@+id/img"
-        app:layout_constraintTop_toTopOf="@+id/img" />
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:scaleType="centerCrop"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.example.myapplication2345678.DragView
+            android:id="@+id/dView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="@+id/img"
+            app:layout_constraintEnd_toEndOf="@+id/img"
+            app:layout_constraintStart_toStartOf="@+id/img"
+            app:layout_constraintTop_toTopOf="@+id/img" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -146,43 +157,45 @@
             app:layout_constraintTop_toTopOf="@+id/adjust"
             app:layout_constraintVertical_bias="0.0" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginEnd="@dimen/_26sdp"
+        <ImageView
+            android:id="@+id/Redo"
+            android:padding="@dimen/_4sdp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:background="@drawable/urbg"
+            android:layout_marginEnd="24dp"
             android:gravity="center"
             android:paddingTop="@dimen/_4sdp"
             android:paddingBottom="@dimen/_6sdp"
-            android:text="R"
+            android:src="@drawable/redo"
             android:textColor="@color/white"
             android:textSize="@dimen/_15sdp"
             app:layout_constraintBottom_toBottomOf="parent"
 
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.592" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/Undo"
+            android:padding="@dimen/_4sdp"
+            android:background="@drawable/urbg"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_30sdp"
 
-            android:layout_marginEnd="@dimen/_25sdp"
+            android:layout_marginEnd="@dimen/_3sdp"
             android:gravity="center"
-            android:paddingTop="@dimen/_4sdp"
-            android:paddingBottom="@dimen/_6sdp"
-            android:text="U"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp"
-            app:layout_constraintBottom_toBottomOf="@+id/textView2"
-            app:layout_constraintEnd_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toTopOf="@+id/textView2"
-            app:layout_constraintVertical_bias="1.0" />
+
+            android:src="@drawable/undo"
+
+            app:layout_constraintBottom_toBottomOf="@+id/Redo"
+            app:layout_constraintEnd_toStartOf="@+id/Redo"
+            app:layout_constraintTop_toTopOf="@+id/Redo"
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <TextView
+        android:id="@+id/save"
         android:layout_width="@dimen/_70sdp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_16sdp"
@@ -203,6 +216,22 @@
         android:layout_marginBottom="@dimen/_7sdp"
         android:layout_height="@dimen/_17sdp"
         android:src="@drawable/tick"
-        app:layout_constraintBottom_toTopOf="@+id/img"
-        app:layout_constraintEnd_toEndOf="@+id/img" />
+        app:layout_constraintBottom_toTopOf="@+id/container_1"
+        app:layout_constraintEnd_toEndOf="@+id/container_1" />
+
+    <ImageView
+        android:id="@+id/close"
+        android:alpha="0.8"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/close"
+        app:layout_constraintBottom_toTopOf="@+id/container_1"
+        app:layout_constraintStart_toStartOf="@+id/container_1" />
+
+
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

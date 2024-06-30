@@ -3,6 +3,7 @@ package com.example.myapplication2345678
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -42,8 +43,13 @@ class DragView @JvmOverloads constructor(
         invalidate()
     }
 
+    fun clear() {
+        stickers.clear()
+        texts.clear()
+    }
+
     fun addText(text: String, x: Float, y: Float, color: Int) {
-        texts.add(Text(text, x, y, color))
+        texts.add(Text(text,x,y,color,40f))
         invalidate()
     }
 
@@ -63,7 +69,7 @@ class DragView @JvmOverloads constructor(
         }
 
         for (text in texts) {
-            paint.color = text.color
+            paint.color = text.color  // Set text color in the Paint object
             paint.textSize = text.size
             canvas.drawText(text.text, text.x, text.y, paint)
         }
@@ -154,6 +160,7 @@ class DragView @JvmOverloads constructor(
         fun isInside(px: Float, py: Float): Boolean {
             val paint = Paint().apply {
                 textSize = size
+                this.color = this@Text.color
             }
             val textWidth = paint.measureText(text)
             val textHeight = paint.fontMetrics.bottom - paint.fontMetrics.top

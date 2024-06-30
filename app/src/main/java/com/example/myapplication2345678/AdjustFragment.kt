@@ -66,15 +66,10 @@ class AdjustFragment() : BottomSheetDialogFragment(){
 
 
             // Apply the combined color matrix to the image
+
             val colorFilter = ColorMatrixColorFilter(colorMatrix)
             MainActivity.img.colorFilter = colorFilter
 
-
-            val file = converters.imageViewToBitmap2(MainActivity.img)
-                ?.let { bitmapToFile(context, it) }
-            val imageUri = Uri.fromFile(file)
-            MainActivity.uri = imageUri
-            MainActivity.img.setImageURI(MainActivity.uri)
         }
 
         private fun applyShadow(fadeIntensity: Float) {
@@ -141,7 +136,7 @@ class AdjustFragment() : BottomSheetDialogFragment(){
         savedInstanceState: Bundle?
     ): View? {
         val context : Context = requireContext()
-        // Inflate the layout for this fragment
+
         val view =  inflater.inflate(R.layout.fragment_adjust, container, false)
 
         val lightBlack25Transparent = Color.parseColor("#00000000")
@@ -262,5 +257,13 @@ class AdjustFragment() : BottomSheetDialogFragment(){
         return view
     }
 
+    override fun onDestroy() {
+        val bitmap : Bitmap = converters.imageViewToBitmap2(MainActivity.img)
+        MainActivity.img.colorFilter = null
+        val drawable = BitmapDrawable(resources,bitmap)
+        MainActivity.img.setImageDrawable(drawable)
+        MainActivity.uri = converters.bitmapToUri(requireContext(),drawable.bitmap)
+        super.onDestroy()
+    }
 
 }
